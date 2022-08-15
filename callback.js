@@ -1,7 +1,5 @@
-const express = require('express')
-const app = express()
-app.set('view engine','ejs')
-const notes = [
+
+let notes = [
   { 
     "id": 1,
     "name": "Arto Hellas", 
@@ -26,6 +24,7 @@ const notes = [
 
 getAll = (req,res) => {
   res.json(notes)
+
 }
 
 getInfo = (req,res) => {
@@ -47,8 +46,28 @@ getId = (req,res) => {
 
 deleteId = (req,res) => {
   const id = req.params.id
-  notes = notes.filter(e=>e.id===Number(id))
+  notes = notes.filter(e=>e.id!==Number(id))
   res.status(204).end()
 }
 
-module.exports = { getAll,getInfo,getId, deleteId }
+addPerson = (request,response) => {
+  const newId = Math.floor(Math.random()*99999)
+  const note = request.body
+  const addId = {
+    name: note.name,
+    number: note.number,
+    id: newId
+  }
+
+  if(!note.number && !note.name){
+    response.status(401).send({ error: 'No name and number'})
+  } else if(!note.name){
+    response.status(401).send({ error: 'No name'})
+  } else if(!note.number){
+    response.status(401).send({ error: 'No number'})
+  }
+
+  response.json(note)
+}
+
+module.exports = { getAll,getInfo,getId, deleteId, addPerson }
