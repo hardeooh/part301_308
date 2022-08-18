@@ -2,10 +2,12 @@
 const { getAll, getInfo, getId, deleteId, addPerson } = require('./callback')
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const uuid = require('node-uuid')
 const app = express()
 const PORT = 3001
 app.use(express.json())
+app.use(cors())
 
 morgan.token('id', function getId (req) {
   return req.id
