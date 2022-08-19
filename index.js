@@ -5,7 +5,6 @@ const morgan = require('morgan')
 const cors = require('cors')
 const uuid = require('node-uuid')
 const app = express()
-const PORT = 3001
 app.use(express.json())
 app.use(cors())
 
@@ -27,6 +26,7 @@ app.get('/api/persons/:id', getId)
 app.delete('/api/persons/:id', deleteId)
 app.post('/api/persons/', addPerson)
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+const port = process.env.PORT || 3001
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`)
 })
