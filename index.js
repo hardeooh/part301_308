@@ -7,6 +7,7 @@ const uuid = require('node-uuid')
 const app = express()
 app.use(express.json())
 app.use(cors())
+app.use(express.static('build'))
 
 morgan.token('id', function getId (req) {
   return req.id
