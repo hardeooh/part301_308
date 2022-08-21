@@ -7,33 +7,33 @@ if (process.argv.length < 3) {
 
 const password = process.argv[2]
 
-const url = `mongodb+srv://admin:a05654563@t3t4.2eodtuo.mongodb.net/?retryWrites=true&w=majority`
+const url = `mongodb+srv://admin:${password}@t3t4.2eodtuo.mongodb.net/?retryWrites=true&w=majority`
 
-const noteSchema = new mongoose.Schema({
-  content: String,
+const phoneSchema = new mongoose.Schema({
+  name: String,
   date: Date,
-  important: Boolean,
+  number: String,
 })
 
-const Note = mongoose.model('Note', noteSchema)
-
-
+const Person = mongoose.model('Person', phoneSchema)
 
 mongoose
   .connect(url)
   .then((result) => {
     console.log('connected')
 
-    const note = new Note({
-      content: 'JS is okay...',
+    const person = new Person({
+      name: 'Kloe Dester',
       date: new Date(),
-      important: true,
+      number: '310-029-3021',
     })
 
-    return note.save()
+    return Note.find({})
   })
-  .then(() => {
-    console.log('note saved!')
+  .then((res) => {
+    res.forEach((e) => {
+      console.log(e)
+    })
     return mongoose.connection.close()
   })
   .catch((err) => console.log(err))
