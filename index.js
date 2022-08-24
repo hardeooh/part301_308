@@ -1,10 +1,14 @@
- 
+require('dotenv').config()
 const { getAll, getInfo, getId, deleteId, addPerson } = require('./callback')
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const uuid = require('node-uuid')
 const app = express()
+const mongoose = require('mongoose')
+const password = process.argv[2]
+const Person = require('./models/person')
+
 app.use(express.json())
 app.use(cors())
 app.use(express.static('build'))
@@ -21,13 +25,18 @@ function assignId (req, res, next) {
   next()
 }
 
-app.get('/api/persons', getAll)
+app.get('/api/persons', (req,res) => {
+  Person.find({}).then(person=>{
+    res.json(person)
+  })
+  
+})
 app.get('/info', getInfo)
 app.get('/api/persons/:id', getId)
 app.delete('/api/persons/:id', deleteId)
 app.post('/api/persons/', addPerson)
 
-const port = process.env.PORT || 3001
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`)
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })

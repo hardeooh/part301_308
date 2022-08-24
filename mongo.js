@@ -6,6 +6,8 @@ if (process.argv.length < 3) {
 }
 
 const password = process.argv[2]
+const newName = process.argv[3]
+const newNumber = process.argv[4]
 
 const url = `mongodb+srv://admin:${password}@t3t4.2eodtuo.mongodb.net/?retryWrites=true&w=majority`
 
@@ -17,23 +19,25 @@ const phoneSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', phoneSchema)
 
+Person
+  .find({})
+  .then((persons) => {
+    persons.map(e=>console.log(e))
+  })
 mongoose
   .connect(url)
   .then((result) => {
     console.log('connected')
 
     const person = new Person({
-      name: 'Kloe Dester',
+      name: newName,
       date: new Date(),
-      number: '310-029-3021',
+      number: newNumber,
     })
 
-    return Note.find({})
+    return person.save()
   })
   .then((res) => {
-    res.forEach((e) => {
-      console.log(e)
-    })
     return mongoose.connection.close()
   })
   .catch((err) => console.log(err))
