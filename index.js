@@ -25,7 +25,7 @@ function assignId (req, res, next) {
 }
 
 //Mongoose COnnection
-const url = `mongodb+srv://admin:${a05654563}@t3t4.2eodtuo.mongodb.net/?retryWrites=true&w=majority`
+const url = `mongodb+srv://admin:a05654563@t3t4.2eodtuo.mongodb.net/?retryWrites=true&w=majority`
 mongoose.connect(url)
 const phoneSchema = new mongoose.Schema({
   name: String,
