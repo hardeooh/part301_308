@@ -9,7 +9,7 @@ const password = process.argv[2]
 const newName = process.argv[3]
 const newNumber = process.argv[4]
 
-const url = `mongodb+srv://admin:a05654563@t3t4.2eodtuo.mongodb.net/?retryWrites=true&w=majority`
+const url = `mongodb+srv://admin:${password}@t3t4.2eodtuo.mongodb.net/?retryWrites=true&w=majority`
 
 const phoneSchema = new mongoose.Schema({
   name: String,
