@@ -1,10 +1,7 @@
 const mongoose = require('mongoose')
-const url = process.env.MONGODB_URI
-console.log(url)
+const url = process.env.MONGO_URI
 
 console.log('connecting to', url)
-
-// const url = `mongodb+srv://admin:${password}@t3t4.2eodtuo.mongodb.net/?retryWrites=true&w=majority`
 
 mongoose.connect(url)
   .then((result) => {
