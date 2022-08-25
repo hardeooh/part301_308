@@ -7,7 +7,6 @@ const uuid = require('node-uuid')
 const app = express()
 const mongoose = require('mongoose')
 const password = process.argv[2]
-const Person = require('./models/person')
 
 app.use(express.json())
 app.use(cors())
@@ -25,6 +24,18 @@ function assignId (req, res, next) {
   next()
 }
 
+//Mongoose COnnection
+const url = `mongodb+srv://admin:${a05654563}@t3t4.2eodtuo.mongodb.net/?retryWrites=true&w=majority`
+mongoose.connect(url)
+const phoneSchema = new mongoose.Schema({
+  name: String,
+  date: Date,
+  number: String,
+})
+
+const Person = mongoose.model('Person', phoneSchema)
+
+//Routes
 app.get('/api/persons', (req,res) => {
   Person.find({}).then(person=>{
     res.json(person)
