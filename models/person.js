@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
 const url = process.env.MONGO_URI
-console.log('connecting to', url)
-console.log('connecting to', url)
 
 mongoose.connect(url)
   .then((result) => {
@@ -24,7 +22,5 @@ personSchema.set('toJSON', {
     delete returnedObject.__v
   }
 })
-
-const Person = mongoose.model('Person', personSchema)
 
 module.exports = mongoose.model('Person', personSchema)

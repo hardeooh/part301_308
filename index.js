@@ -6,7 +6,8 @@ const cors = require('cors')
 const uuid = require('node-uuid')
 const app = express()
 const mongoose = require('mongoose')
-const { Person } = require('./models/person')
+const Person = require('./models/person')
+
 
 app.use(express.json())
 app.use(cors())
@@ -24,16 +25,9 @@ function assignId (req, res, next) {
   next()
 }
 
-//Mongoose COnnection
-
 
 //Routes
-app.get('/api/persons', (req,res) => {
-  Person.find({}).then(person=>{
-    res.json(person)
-  })
-  
-})
+app.get('/api/persons', getAll)
 app.get('/info', getInfo)
 app.get('/api/persons/:id', getId)
 app.delete('/api/persons/:id', deleteId)

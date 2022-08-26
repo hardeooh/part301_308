@@ -1,3 +1,5 @@
+const { default: mongoose } = require('mongoose')
+const Person = require('./models/person')
 
 let notes = [
   { 
@@ -23,8 +25,9 @@ let notes = [
 ]
 
 getAll = (req,res) => {
-  res.json(notes)
-
+  Person.find({}).then(person=>{
+    res.json(person)
+  })
 }
 
 getInfo = (req,res) => {
@@ -33,41 +36,47 @@ getInfo = (req,res) => {
   res.send(`<h1>The phonebook has ${count} records</h1><br><h2>${currentDate}</h2>`)
 }
 
-getId = (req,res) => {
-  const id = req.params.id
-  const note = notes.find(e=>e.id===Number(id))
-  if(note){
-    res.json(note)
-    console.log(note)
-  } else {
-    res.status(404).end() 
-  }
+getId = (request, response) => {
+  Person.findById(request.params.id)
+    .then(person => {
+      if(person){
+        response.json(person)
+      } else {
+        response.status(404).send({error: "Cannot find ID"})
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+      response.status(400).send({ error: 'malformatted id' })
+    })
 }
 
 deleteId = (req,res) => {
   const id = req.params.id
-  notes = notes.filter(e=>e.id!==Number(id))
-  res.status(204).end()
+  console.log(id)
+  console.log(mongoose.Types.ObjectId.isValid(req.params.id))
+  Person.findByIdAndDelete(id)
+    .then((result) => {
+      res.status(204)
+    })
+    .catch(error=>console.log(error))
 }
 
-addPerson = (request,response) => {
-  const newId = Math.floor(Math.random()*99999)
-  const note = request.body
-  const addId = {
-    name: note.name,
-    number: note.number,
-    id: newId
+addPerson = (req,res) => {
+  const body = req.body
+  console.log(req.body)
+  if(body.name === undefined){
+    return res.status(400).json({error: 'content missing'})
   }
+  const person = new Person({
+    name: body.name,
+    date: new Date(),
+    number: body.number,
+  })
 
-  if(!note.number && !note.name){
-    response.status(401).send({ error: 'No name and number'})
-  } else if(!note.name){
-    response.status(401).send({ error: 'No name'})
-  } else if(!note.number){
-    response.status(401).send({ error: 'No number'})
-  }
-
-  response.json(note)
+  person.save().then(person=>{
+    res.json(person)
+  })
 }
 
 module.exports = { getAll,getInfo,getId, deleteId, addPerson }
