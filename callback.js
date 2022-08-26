@@ -2,18 +2,27 @@ const { default: mongoose } = require('mongoose')
 const Person = require('./models/person')
 
 getAll = (req,res) => {
-  Person.find({}).then(person=>{
+  Person.find({})
+  .then(person=>{
     res.json(person)
+  })
+  .catch(error=>{
+    next(error)
   })
 }
 
 getInfo = (req,res) => {
-  const count = notes.length
-  const currentDate = new Date()
-  res.send(`<h1>The phonebook has ${count} records</h1><br><h2>${currentDate}</h2>`)
+  let count = 0
+  Person.find({})
+    .then((person) => {
+      count = person.length
+      const currentDate = new Date()
+      res.send(`<h1>The phonebook has ${count} records</h1><br><h2>${currentDate}</h2>`)
+    })
+
 }
 
-getId = (request, response) => {
+getId = (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => {
       if(person){
@@ -23,20 +32,19 @@ getId = (request, response) => {
       }
     })
     .catch(error=>{
-      console.log(error);
-      response.status(400).send({ error: 'malformatted id' })
+      next(error)
     })
 }
 
 deleteId = (req,res) => {
   const id = req.params.id
-  console.log(id)
-  console.log(mongoose.Types.ObjectId.isValid(req.params.id))
   Person.findByIdAndDelete(id)
     .then((result) => {
       res.status(204)
     })
-    .catch(error=>console.log(error))
+    .catch(error=>{
+      next(error)
+    })
 }
 
 addPerson = (req,res) => {
@@ -49,6 +57,9 @@ addPerson = (req,res) => {
     name: body.name,
     date: new Date(),
     number: body.number,
+  })
+  .catch(error=>{
+    next(error)
   })
 
   person.save().then(person=>{
