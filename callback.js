@@ -45,6 +45,7 @@ deleteId = (req,res) => {
     .catch(error=>{
       next(error)
     })
+    app.get('/api/persons', getAll)
 }
 
 addPerson = (req,res) => {
@@ -58,13 +59,14 @@ addPerson = (req,res) => {
     date: new Date(),
     number: body.number,
   })
-  .catch(error=>{
-    next(error)
-  })
 
-  person.save().then(person=>{
-    res.json(person)
-  })
+  person.save()
+    .then(person=>{
+      res.json(person)
+    })
+    .catch(error=>{
+      console.log(error);
+    })
 }
 
 module.exports = { getAll,getInfo,getId, deleteId, addPerson }
