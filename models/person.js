@@ -10,8 +10,15 @@ mongoose.connect(url)
   })
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  date: Date,
+  name: {
+    type: 'String',
+    minLength: 4,
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  },
   number: String,
 })
 

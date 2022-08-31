@@ -28,6 +28,7 @@ function assignId (req, res, next) {
 
 //Routes
 app.get('/api/persons', getAll)
+app.put('/api/persons', updatePerson)
 app.get('/info', getInfo)
 app.get('/api/persons/:id', getId)
 app.delete('/api/persons/:id', deleteId)
@@ -46,6 +47,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if(error.name === 'ValidationError'){
+    return response.status(400).json({ error: error.message})
   }
 
   next(error)

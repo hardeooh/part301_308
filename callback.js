@@ -1,7 +1,6 @@
-const { default: mongoose } = require('mongoose')
 const Person = require('./models/person')
 
-getAll = (req,res) => {
+getAll = (req,res,next) => {
   Person.find({})
   .then(person=>{
     res.json(person)
@@ -18,6 +17,9 @@ getInfo = (req,res) => {
       count = person.length
       const currentDate = new Date()
       res.send(`<h1>The phonebook has ${count} records</h1><br><h2>${currentDate}</h2>`)
+    })
+    .catch((error)=>{
+      next(error)
     })
 
 }
@@ -36,21 +38,19 @@ getId = (request, response, next) => {
     })
 }
 
-deleteId = (req,res) => {
+deleteId = (req,res,next) => {
   const id = req.params.id
   Person.findByIdAndDelete(id)
-    .then((result) => {
-      res.status(204)
+    .then((message) => {
+      return res.status(204).send(message)
     })
     .catch(error=>{
       next(error)
     })
-    app.get('/api/persons', getAll)
 }
 
-addPerson = (req,res) => {
+addPerson = (req,res,next) => {
   const body = req.body
-  console.log(req.body)
   if(body.name === undefined){
     return res.status(400).json({error: 'content missing'})
   }
@@ -65,8 +65,30 @@ addPerson = (req,res) => {
       res.json(person)
     })
     .catch(error=>{
-      console.log(error);
+      console.log("GET error")
+      return res.json(error["message"]);
     })
 }
 
-module.exports = { getAll,getInfo,getId, deleteId, addPerson }
+updatePerson = (req,res,next)=>{
+    const body = req.body
+    const person = {
+      name: body.name,
+      date: new Date(),
+      number: body.number,
+    }
+    console.log(body.name, body.number)
+    Person.findOneAndUpdate({name: body.name}, {number: body.number})
+      .then((person) => {
+        res.json(person);
+      })
+      .catch((error)=>{
+        next(error)
+      })
+
+  }
+
+
+
+
+module.exports = { getAll,getInfo,getId, deleteId, addPerson, updatePerson }
