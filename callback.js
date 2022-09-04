@@ -51,13 +51,19 @@ deleteId = (req,res,next) => {
 
 addPerson = (req,res,next) => {
   const body = req.body
-  if(body.name === undefined){
-    return res.status(400).json({error: 'content missing'})
-  }
+
+  // let phoneNumber = body['number'].split('').filter(e=>'123456789'.includes(e)).join('')
+  // if(phoneNumber.length === 6){
+  //   phoneNumber = `${phoneNumber.slice(0,3)}-${phoneNumber.slice(3)}`
+  // }
+
+  console.log(phoneNumber)
+
   const person = new Person({
     name: body.name,
     date: new Date(),
-    number: body.number,
+    number: phoneNumber,
+
   })
 
   person.save()
@@ -66,7 +72,7 @@ addPerson = (req,res,next) => {
     })
     .catch(error=>{
       console.log("GET error")
-      return res.json(error["message"]);
+      next(error);
     })
 }
 

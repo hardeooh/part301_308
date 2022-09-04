@@ -1,12 +1,10 @@
 require('dotenv').config()
-const { getAll, getInfo, getId, deleteId, addPerson } = require('./callback')
+const { getAll, getInfo, getId, deleteId, addPerson, updatePerson } = require('./callback')
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const uuid = require('node-uuid')
 const app = express()
-const mongoose = require('mongoose')
-const Person = require('./models/person')
 
 
 app.use(express.json())
@@ -43,12 +41,12 @@ app.use(unknownEndpoint)
 
 //error handler
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
+  console.error('error Handler is here', error.name, error.message)
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if(error.name === 'ValidationError'){
-    return response.status(400).json({ error: error.message})
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)
